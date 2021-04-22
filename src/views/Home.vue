@@ -7,12 +7,19 @@
     <input type="number" v-model="timeSeconds" min="0" max="59" />
     <br />
     Pace {{ paceMinutes }} : {{ paceSeconds }} min/km
+    <TimeSelector
+      v-on:input="timeMinutes"
+      v-bind:timeMinutes="timeMinutes"
+    ></TimeSelector>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-
+import { Vue, Options } from "vue-class-component";
+import TimeSelector from "../components/TimeSelector.vue";
+@Options({
+  components: { TimeSelector },
+})
 export default class Home extends Vue {
   distance = 0;
 

@@ -1,6 +1,8 @@
 <template>
   <div class="time-selector">
-    <input type="number" />
+    <input type="number" v-model="timeMinutes" />
+    :
+    <input type="number" v-model="timeSeconds" />
   </div>
 </template>
 
@@ -9,11 +11,13 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   props: {
-    msg: String,
+    timeSeconds: Number,
+    timeMinutes: Number,
   },
 })
-export default class HelloWorld extends Vue {
-  msg!: string;
+export default class TimeSelector extends Vue {
+  timeSeconds!: number;
+  timeMinutes!: number;
 }
 </script>
 
