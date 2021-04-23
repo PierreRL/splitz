@@ -1,8 +1,16 @@
 <template>
   <div class="time-selector">
-    <input type="number" v-model="timeMinutes" />
+    <input
+      type="number"
+      v-on:input="updateMinutes($event.target.value)"
+      :value="timeMinutes"
+    />
     :
-    <input type="number" v-model="timeSeconds" />
+    <input
+      type="number"
+      v-on:input="updateSeconds($event.target.value)"
+      :value="timeSeconds"
+    />
   </div>
 </template>
 
@@ -18,6 +26,13 @@ import { Options, Vue } from "vue-class-component";
 export default class TimeSelector extends Vue {
   timeSeconds!: number;
   timeMinutes!: number;
+
+  updateSeconds(value: number) {
+    this.$emit("updateSeconds", value);
+  }
+  updateMinutes(value: number) {
+    this.$emit("updateMinutes", value);
+  }
 }
 </script>
 
