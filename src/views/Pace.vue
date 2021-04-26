@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Distance {{ distance }} <input type="number" v-model="distance" /> <br />
-    Time {{ timeMinutes }} : {{ timeSeconds }}
+  <div class="pace">
+    <h1>Calculate pace</h1>
+    Distance <input type="number" v-model="distance" /> <br />
     <TimeSelector
       v-on:updateSeconds="timeSeconds = $event"
       v-bind:timeSeconds="timeSeconds"
@@ -12,7 +12,12 @@
     Pace {{ paceMinutes }} : {{ paceSeconds }} min/km
   </div>
 </template>
-
+<style lang="scss">
+@import "../styles/variables";
+.pace {
+  @extend %bounding-box;
+}
+</style>
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import TimeSelector from "../components/TimeSelector.vue";

@@ -1,5 +1,6 @@
 <template>
   <div class="time-selector">
+    <span class="label-selector">Time</span>
     <input
       type="number"
       v-on:input="updateMinutes($event.target.value)"
@@ -13,7 +14,13 @@
     />
   </div>
 </template>
-
+<style lang="scss">
+@import "../styles/variables";
+.time-selector {
+  display: inline-block;
+  padding: 10px 0;
+}
+</style>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
@@ -35,6 +42,3 @@ export default class TimeSelector extends Vue {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
