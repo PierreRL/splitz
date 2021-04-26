@@ -17,13 +17,22 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ "../views/Pace.vue"),
   },
   {
-    path: "/change-units",
-    name: "ChangeUnits",
+    path: "/unit-conversion",
+    name: "Unit Conversion",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/ChangeUnits.vue"),
+      import(/* webpackChunkName: "about" */ "../views/UnitConversion.vue"),
+  },
+  {
+    path: "/time",
+    name: "Time",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Time.vue"),
   },
 ];
 
