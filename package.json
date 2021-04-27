@@ -53,5 +53,11 @@
     "> 1%",
     "last 2 versions",
     "not dead"
+  ],
+  "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
   ]
 }

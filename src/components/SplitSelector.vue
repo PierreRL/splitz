@@ -1,9 +1,9 @@
 <template>
-  <div class="distance-selector selector-wrapper">
+  <div class="splits-selector selector-wrapper">
     <input
       type="number"
       class="distance-selector"
-      v-on:input="updateDistance($event.target.value)"
+      v-on:input="updateSplitDistance($event.target.value)"
       :value="distance"
       placeholder="0"
     />
@@ -27,7 +27,7 @@ import { distanceUnits } from "../models/units";
     unit: Number,
   },
 })
-export default class TimeSelector extends Vue {
+export default class SplitSelector extends Vue {
   distanceUnits = distanceUnits;
   distance!: number;
   unit!: number;

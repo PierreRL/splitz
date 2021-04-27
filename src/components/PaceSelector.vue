@@ -1,52 +1,46 @@
 <template>
-  <div class="time-selector selector-wrapper">
-    <input
-      placeholder="00"
-      type="number"
-      v-on:input="updateHours($event.target.value)"
-      :value="timeHours"
-    />
-    :
+  <div class="pace-selector selector-wrapper">
     <input
       placeholder="00"
       type="number"
       v-on:input="updateMinutes($event.target.value)"
-      :value="timeMinutes"
+      :value="paceMinutes"
     />
     :
     <input
       placeholder="00"
       type="number"
       v-on:input="updateSeconds($event.target.value)"
-      :value="timeSeconds"
+      :value="paceSeconds"
     />
-    <span class="time-indicator">hrs:min:secs</span>
+    <select :value="unit" @input="updateUnit($event.target.value)">
+      <option v-for="(unit, value) in paceUnits" :value="unit" :key="value">
+        {{ value }}
+      </option>
+    </select>
   </div>
 </template>
 <style lang="scss"></style>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { paceUnits } from "../models/units";
 
 @Options({
   props: {
-    timeSeconds: Number,
-    timeMinutes: Number,
-    timeHours: Number,
+    paceSeconds: Number,
+    paceMinutes: Number,
   },
 })
-export default class TimeSelector extends Vue {
-  timeSeconds!: number;
-  timeMinutes!: number;
-  timeHours!: number;
+export default class PaceSelector extends Vue {
+  paceSeconds!: number;
+  paceMinutes!: number;
+  paceUnits = paceUnits;
 
   updateSeconds(value: number) {
     this.$emit("updateSeconds", value);
   }
   updateMinutes(value: number) {
     this.$emit("updateMinutes", value);
-  }
-  updateHours(value: number) {
-    this.$emit("updateHours", value);
   }
 }
 </script>

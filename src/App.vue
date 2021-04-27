@@ -13,8 +13,8 @@
 
 <style lang="scss">
 @import "./styles/variables";
-$nav-height: 50px;
-$body-padding: 10px;
+$nav-height: 58px;
+$body-padding: 40px;
 #body {
   font-family: "Roboto", sans-serif;
   color: white;
@@ -26,7 +26,7 @@ $body-padding: 10px;
   background-position: bottom right, bottom left, top left;
   background-size: contain;
   min-height: calc(100vh - (#{$nav-height} + #{$body-padding * 2}));
-
+  font-size: 2rem;
   background-repeat: no-repeat;
   background-color: #f6d6b9;
 }
@@ -50,10 +50,10 @@ $body-padding: 10px;
     vertical-align: middle;
     display: inline-block;
     /* float: left; */
-    padding: 18px 18px;
+    padding: 18px 22px;
     font-family: "Metropolis", sans-serif;
-    font-size: 0.8rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    font-weight: 600;
     color: white;
     text-decoration: none;
     &:hover {
