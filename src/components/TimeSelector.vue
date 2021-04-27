@@ -1,26 +1,22 @@
 <template>
-  <div class="time-selector">
+  <div class="time-selector selector-wrapper">
     <span class="label-selector">Time</span>
     <input
+      placeholder="00"
       type="number"
       v-on:input="updateMinutes($event.target.value)"
       :value="timeMinutes"
     />
     :
     <input
+      placeholder="00"
       type="number"
       v-on:input="updateSeconds($event.target.value)"
       :value="timeSeconds"
     />
   </div>
 </template>
-<style lang="scss">
-@import "../styles/variables";
-.time-selector {
-  display: inline-block;
-  padding: 10px 0;
-}
-</style>
+<style lang="scss"></style>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
