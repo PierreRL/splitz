@@ -10,7 +10,8 @@
         v-on:updateUnit="distanceUnit = +$event"
       >
       </DistanceSelector>
-      <span class="label-selector space-above">Time</span>
+      <hr />
+      <span class="label-selector">Time</span>
       <TimeSelector
         v-on:updateSeconds="timeSeconds = +$event"
         v-bind:timeSeconds="timeSeconds"
@@ -18,7 +19,6 @@
         v-bind:timeMinutes="timeMinutes"
         v-on:updateHours="timeHours = +$event"
         v-bind:timeHours="timeHours"
-        class="space-above"
       ></TimeSelector>
       <span class="or-text">or</span>
       <span class="label-selector">Pace</span>
@@ -30,14 +30,13 @@
         v-bind:unit="paceUnit"
         v-on:updateUnit="paceUnit = +$event"
       ></PaceSelector>
-
-      <span class="label-selector space-above">Split Every</span>
+      <hr />
+      <span class="label-selector">Split Every</span>
       <SplitSelector
         v-on:updateSplitDistance="splitDistance = +$event"
         v-bind:distance="splitDistance"
         v-bind:unit="splitUnit"
         v-on:updateSplitUnit="splitUnit = +$event"
-        class="space-above"
       >
       </SplitSelector>
     </div>
@@ -49,12 +48,77 @@
       >{{ splitPaceMinutesString }} : {{ splitPaceSecondsString }}</span
     >
     <br /><span class="split-distance-output">
-      / {{ splitDistance }} {{ splitUnitString }}</span
+      per {{ splitDistance }} {{ splitUnitString }}</span
     >
+  </div>
+  <br />
+  <div class="space-above">
+    <table>
+      <tr>
+        <th>Total Distance</th>
+        <th>Total Time</th>
+      </tr>
+      <tr v-for="(distance, index) in distArray" :key="distance">
+        <td>{{ distance }}</td>
+        <td>
+          <span v-if="timeArray[index].hours != 0"
+            >{{ timeArray[index].hours }} : </span
+          ><span
+            v-if="timeArray[index].minutes != 0 || timeArray[index].hours != 0"
+            >{{
+              stringifyNumber(
+                timeArray[index].minutes,
+                timeArray[index].hours != 0
+              )
+            }}
+            :</span
+          >
+
+          {{
+            stringifyNumber(
+              timeArray[index].seconds,
+              timeArray[index].minutes != 0 || timeArray[index].hours != 0
+            )
+          }}
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 <style lang="scss">
 @import "../styles/variables";
+table {
+  th {
+    font-weight: 400;
+    font-size: 1.5rem;
+    padding: 5px 10px;
+  }
+  td {
+    padding: 0;
+  }
+  tr {
+    font-weight: 300;
+    font-size: 1.4rem;
+  }
+  tr:nth-child(even) {
+    background-color: rgba(54, 61, 87, 0.5);
+  }
+  display: inline-block;
+  text-align: center;
+  padding: 10px 20px 20px 20px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.55);
+  box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.57);
+  background-color: $primary-color;
+  text-align: center;
+  background-color: rgba(85, 97, 141, 0.5);
+}
+hr {
+  width: 100%;
+  border: white solid 1px;
+  grid-column: 1 / span 2;
+  margin: 25px auto;
+}
 .split-output {
   font-size: 3rem;
   font-weight: 300;
@@ -71,9 +135,7 @@
   padding: 4px;
   grid-column: 1 / span 2;
 }
-.calculator-wrapper {
-  row-gap: 0;
-}
+
 .space-above {
   margin-top: 35px;
 }
@@ -101,6 +163,27 @@ export default class Home extends Vue {
   private priv_splitDistance = 0;
   private priv_splitUnit = 1 / 1000;
 
+  distArray: number[] = [0];
+  timeArray: Time[] = [{ hours: 0, minutes: 0, seconds: 0 }];
+
+  splitPace: Time = { hours: 0, minutes: 0, seconds: 0 };
+
+  private time: Time = { hours: 0, minutes: 0, seconds: 0 };
+  private pace: Time = { hours: 0, minutes: 0, seconds: 0 };
+
+  get shouldDisplayTable() {
+    return (
+      this.distance != 0 &&
+      this.splitDistance != 0 &&
+      (this.pace.hours != 0 || this.pace.minutes != 0 || this.pace.seconds != 0)
+    );
+  }
+  stringifyNumber(number: number, shouldAddZero: boolean): string {
+    if (number >= -9 && number <= 9 && shouldAddZero) {
+      return "0" + number.toString();
+    }
+    return number.toString();
+  }
   get splitUnitString() {
     return Object.keys(distanceUnits).find(
       (key) => distanceUnits[key] == this.splitUnit
@@ -123,6 +206,12 @@ export default class Home extends Vue {
     this.updateSplitpace();
   }
 
+  /*   stringifyTime(time: number): string {
+    if (time >= -9 && time <= 9) {
+      return "0" + time.toString;
+    }
+    return time.toString();
+  } */
   get splitPaceSecondsString(): string {
     if (this.splitPace.seconds >= -9 && this.splitPace.seconds <= 9) {
       return "0" + this.splitPace.seconds.toString();
@@ -137,11 +226,6 @@ export default class Home extends Vue {
     }
     return this.splitPace.minutes.toString();
   }
-
-  splitPace: Time = { hours: 0, minutes: 0, seconds: 0 };
-
-  private time: Time = { hours: 0, minutes: 0, seconds: 0 };
-  private pace: Time = { hours: 0, minutes: 0, seconds: 0 };
 
   get distance() {
     return this.priv_distance;
@@ -250,6 +334,55 @@ export default class Home extends Vue {
     const totalSplitTime = totalPace * (this.splitDistance * this.splitUnit);
 
     this.splitPace = timeUtil.getTimeFromSecs(totalSplitTime, true);
+    this.updateSplitsArray();
+  }
+
+  updateSplitsArray() {
+    if (!this.shouldDisplayTable) {
+      this.distArray = [0];
+      this.timeArray = [{ hours: 0, minutes: 0, seconds: 0 }];
+      return;
+    }
+    if (
+      this.splitDistance == 0 ||
+      this.splitUnit == 0 ||
+      this.distance == 0 ||
+      this.distanceUnit == 0
+    ) {
+      this.distArray = [];
+      this.timeArray = [];
+      return;
+    }
+
+    this.distArray = [];
+    this.timeArray = [];
+    let totalSplitDistance = this.splitDistance * this.splitUnit;
+    let totalDistance = this.distance * this.distanceUnit;
+    let distanceDone = 0;
+
+    let totalSplitTime =
+      this.splitPace.hours * 3600 +
+      this.splitPace.minutes * 60 +
+      this.splitPace.seconds;
+    let totalTime =
+      this.time.hours * 3600 + this.time.minutes * 60 + this.time.seconds;
+    let timeDone = 0;
+    while (distanceDone < this.distance * this.distanceUnit) {
+      let distanceLeft = totalDistance - distanceDone;
+      let timeLeft = totalTime - timeDone;
+      if (distanceLeft < totalSplitDistance) {
+        distanceDone += distanceLeft;
+        this.distArray.push(Math.round(distanceDone / this.splitUnit));
+        timeDone += timeLeft;
+        this.timeArray.push(timeUtil.getTimeFromSecs(timeDone, true));
+      } else {
+        distanceDone += totalSplitDistance;
+        this.distArray.push(Math.round(distanceDone / this.splitUnit));
+        timeDone += totalSplitTime;
+        this.timeArray.push(timeUtil.getTimeFromSecs(timeDone, true));
+      }
+      console.log(distanceDone / this.splitUnit);
+    }
   }
 }
 </script>

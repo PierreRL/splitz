@@ -1,7 +1,7 @@
 <template>
   <div class="pace bounding-box">
     <h1>Calculate Pace</h1>
-    <div class="calculator-wrapper">
+    <div class="calculator-wrapper" id="pace-calculator-wrapper">
       <span class="label-selector">Pace</span>
       <PaceOutput
         :paceMinutes="paceMinutes"
@@ -32,6 +32,9 @@
 </template>
 <style lang="scss">
 @import "../styles/variables";
+#pace-calculator-wrapper {
+  row-gap: 20px;
+}
 </style>
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
