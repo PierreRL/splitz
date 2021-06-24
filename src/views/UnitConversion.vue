@@ -1,5 +1,8 @@
 <template>
-  <div class="unit-conversion">
-    <h1>This is the changing units page</h1>
+  <div class="unit-conversion bounding-box">
+    <h4>This will be the unit conversion page.</h4>
   </div>
 </template>
+<style lang="scss">
+@import "../styles/variables";
+</style>

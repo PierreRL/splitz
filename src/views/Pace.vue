@@ -65,7 +65,11 @@ export default class Home extends Vue {
     return this.time.minutes;
   }
   set timeMinutes(timeMinutes: number) {
-    this.time.minutes = timeMinutes;
+    if (timeMinutes < 60 && timeMinutes >= 0) {
+      this.time.minutes = timeMinutes;
+    } else {
+      this.time.minutes = 59;
+    }
   }
   get timeSeconds(): number {
     return this.time.seconds;

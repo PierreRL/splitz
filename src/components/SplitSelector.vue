@@ -7,7 +7,7 @@
       :value="distance"
       placeholder="0"
     />
-    <select :value="unit" @input="updateUnit($event.target.value)">
+    <select :value="unit" @input="updateSplitUnit($event.target.value)">
       <option v-for="(unit, value) in distanceUnits" :value="unit" :key="value">
         {{ value }}
       </option>
@@ -31,11 +31,11 @@ export default class SplitSelector extends Vue {
   distanceUnits = distanceUnits;
   distance!: number;
   unit!: number;
-  updateDistance(value: number) {
-    this.$emit("updateDistance", value);
+  updateSplitDistance(value: number) {
+    this.$emit("updateSplitDistance", value);
   }
-  updateUnit(value: number) {
-    this.$emit("updateUnit", value);
+  updateSplitUnit(value: number) {
+    this.$emit("updateSplitUnit", value);
   }
 }
 </script>

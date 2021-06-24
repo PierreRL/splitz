@@ -29,11 +29,13 @@ import { paceUnits } from "../models/units";
   props: {
     paceSeconds: Number,
     paceMinutes: Number,
+    unit: Number,
   },
 })
 export default class PaceSelector extends Vue {
   paceSeconds!: number;
   paceMinutes!: number;
+  unit!: number;
   paceUnits = paceUnits;
 
   updateSeconds(value: number) {
@@ -41,6 +43,9 @@ export default class PaceSelector extends Vue {
   }
   updateMinutes(value: number) {
     this.$emit("updateMinutes", value);
+  }
+  updateUnit(value: number) {
+    this.$emit("updateUnit", value);
   }
 }
 </script>
