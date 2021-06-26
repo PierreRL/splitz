@@ -26,6 +26,7 @@ input {
   font-family: Roboto, sans-serif;
   font-size: 2rem;
   color: rgb(20, 20, 20);
+  background-color: white;
   &:focus {
     outline: none;
   }
@@ -33,6 +34,7 @@ input {
     width: 100px;
   }
 }
+
 //Gets rid of input buttons
 /* input[type="number"] {
   -webkit-appearance: textfield;
@@ -100,4 +102,36 @@ select {
   grid-template-columns: auto auto;
   grid-template-rows: auto auto auto auto;
   align-items: start;
+}
+#pace-calculator-wrapper {
+  row-gap: 20px;
+}
+@media (max-width: 760px) {
+  #pace-calculator-wrapper {
+    row-gap: 5px;
+  }
+  hr {
+    margin: 10px auto;
+  }
+  .bounding-box {
+    padding: 10px 10% 20px 10%;
+  }
+  .calculator-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    align-items: center;
+  }
+  .selector-wrapper {
+    align-self: center;
+  }
+  .label-selector {
+    align-self: center;
+    justify-self: center;
+    padding-left: 20px;
+    margin-top: 0;
+  }
+  .space-above-mobile {
+    margin-top: 10px;
+  }
 }

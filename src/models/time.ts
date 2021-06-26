@@ -44,4 +44,8 @@ export function getTimeFromSecsWithoutHours(totalSeconds: number, round: boolean
 function roundTime(time: Time): Time {
     return { hours: Math.round(time.hours), minutes: Math.round(time.minutes), seconds: Math.round(time.seconds) };
 }
+export function roundToTwo(num: number): number {
+    const m = Number((Math.abs(num) * 100).toPrecision(15));
+    return Math.round(m) / 100 * Math.sign(num);
+}
 

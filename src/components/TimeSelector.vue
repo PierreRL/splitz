@@ -20,10 +20,31 @@
       v-on:input="updateSeconds($event.target.value)"
       :value="timeSeconds"
     />
-    <span class="time-indicator">hrs:min:secs</span>
+    <span
+      class="time-indicator desktop-time-indicator"
+      id="desktop-time-indicator"
+      >hrs:min:secs</span
+    >
   </div>
+  <span class="time-indicator" id="mobile-time-indicator">hrs:min:secs</span>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+#mobile-time-indicator {
+  display: none;
+  margin-top: 5px;
+}
+#desktop-time-indicator {
+  display: inline-block;
+}
+@media (max-width: 760px) {
+  #desktop-time-indicator {
+    display: none;
+  }
+  #mobile-time-indicator {
+    display: block;
+  }
+}
+</style>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 

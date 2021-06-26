@@ -10,7 +10,7 @@
         v-bind:unit="paceUnit"
         v-on:updateUnit="paceUnit = +$event"
       ></PaceOutput>
-      <span class="label-selector">Distance</span>
+      <span class="label-selector space-above-mobile">Distance</span>
       <DistanceSelector
         v-on:updateDistance="distance = +$event"
         v-bind:distance="distance"
@@ -18,7 +18,7 @@
         v-on:updateUnit="distanceUnit = +$event"
       >
       </DistanceSelector>
-      <span class="label-selector">Time</span>
+      <span class="label-selector space-above-mobile">Time</span>
       <TimeSelector
         v-on:updateSeconds="timeSeconds = +$event"
         v-bind:timeSeconds="timeSeconds"
@@ -32,9 +32,6 @@
 </template>
 <style lang="scss">
 @import "../styles/variables";
-#pace-calculator-wrapper {
-  row-gap: 20px;
-}
 </style>
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";

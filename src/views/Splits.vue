@@ -53,9 +53,9 @@
   </div>
   <br />
   <div class="space-above">
-    <table>
+    <table v-if="!tableHasTooManyRows">
       <tr>
-        <th>Total Distance</th>
+        <th>Total Distance ({{ splitUnitString }})</th>
         <th>Total Time</th>
       </tr>
       <tr v-for="(distance, index) in distArray" :key="distance">
@@ -83,6 +83,12 @@
         </td>
       </tr>
     </table>
+    <div class="bounding-box" v-else>
+      <span class="or-text"
+        >The number of splits for this distance is over 100. Please increase the
+        split distance to see the breakdown.</span
+      >
+    </div>
   </div>
 </template>
 <style lang="scss">
@@ -139,8 +145,11 @@ hr {
 .space-above {
   margin-top: 35px;
 }
-.label-selector {
-  align-self: flex-start;
+
+@media (max-width: 760px) {
+  .or-text {
+    padding: 0 4px;
+  }
 }
 </style>
 <script lang="ts">
@@ -163,6 +172,8 @@ export default class Home extends Vue {
   private priv_splitDistance = 0;
   private priv_splitUnit = 1 / 1000;
 
+  tableHasTooManyRows = false;
+
   distArray: number[] = [0];
   timeArray: Time[] = [{ hours: 0, minutes: 0, seconds: 0 }];
 
@@ -171,7 +182,7 @@ export default class Home extends Vue {
   private time: Time = { hours: 0, minutes: 0, seconds: 0 };
   private pace: Time = { hours: 0, minutes: 0, seconds: 0 };
 
-  get shouldDisplayTable() {
+  get shouldDisplayTable(): boolean {
     return (
       this.distance != 0 &&
       this.splitDistance != 0 &&
@@ -184,12 +195,12 @@ export default class Home extends Vue {
     }
     return number.toString();
   }
-  get splitUnitString() {
+  get splitUnitString(): string | undefined {
     return Object.keys(distanceUnits).find(
       (key) => distanceUnits[key] == this.splitUnit
     );
   }
-  get splitDistance() {
+  get splitDistance(): number {
     return this.priv_splitDistance;
   }
 
@@ -197,7 +208,7 @@ export default class Home extends Vue {
     this.priv_splitDistance = splitDistance;
     this.updateSplitpace();
   }
-  get splitUnit() {
+  get splitUnit(): number {
     return this.priv_splitUnit;
   }
 
@@ -227,7 +238,7 @@ export default class Home extends Vue {
     return this.splitPace.minutes.toString();
   }
 
-  get distance() {
+  get distance(): number {
     return this.priv_distance;
   }
   set distance(distance: number) {
@@ -235,7 +246,7 @@ export default class Home extends Vue {
     this.updatePace();
   }
 
-  get distanceUnit() {
+  get distanceUnit(): number {
     return this.priv_distanceUnit;
   }
 
@@ -255,7 +266,7 @@ export default class Home extends Vue {
     }
     this.updatePace();
   }
-  get paceUnit() {
+  get paceUnit(): number {
     return this.priv_paceUnit;
   }
   set paceUnit(paceUnit: number) {
@@ -301,7 +312,7 @@ export default class Home extends Vue {
     this.pace.hours = paceHours;
   } */
 
-  updatePace() {
+  updatePace(): void {
     if (this.distance == 0) {
       this.pace = timeUtil.getTimeFromSecsWithoutHours(0, true);
       return;
@@ -314,7 +325,7 @@ export default class Home extends Vue {
     this.pace = timeUtil.getTimeFromSecsWithoutHours(totalPace, true);
     this.updateSplitpace();
   }
-  updateTime() {
+  updateTime(): void {
     const totalDistance = this.distance * this.distanceUnit;
     const totalPace =
       (this.pace.hours * 3600 + this.pace.minutes * 60 + this.pace.seconds) /
@@ -326,7 +337,7 @@ export default class Home extends Vue {
     this.updateSplitpace();
   }
 
-  updateSplitpace() {
+  updateSplitpace(): void {
     const totalPace =
       (this.pace.hours * 3600 + this.pace.minutes * 60 + this.pace.seconds) /
       this.paceUnit;
@@ -337,48 +348,45 @@ export default class Home extends Vue {
     this.updateSplitsArray();
   }
 
-  updateSplitsArray() {
+  updateSplitsArray(): void {
     if (!this.shouldDisplayTable) {
       this.distArray = [0];
       this.timeArray = [{ hours: 0, minutes: 0, seconds: 0 }];
       return;
     }
+
     if (
-      this.splitDistance == 0 ||
-      this.splitUnit == 0 ||
-      this.distance == 0 ||
-      this.distanceUnit == 0
+      (this.distance * this.distanceUnit) /
+        (this.splitDistance * this.splitUnit) >
+      100
     ) {
+      this.tableHasTooManyRows = true;
       this.distArray = [];
       this.timeArray = [];
       return;
     }
-
+    this.tableHasTooManyRows = false;
     this.distArray = [];
     this.timeArray = [];
     let totalSplitDistance = this.splitDistance * this.splitUnit;
     let totalDistance = this.distance * this.distanceUnit;
     let distanceDone = 0;
 
-    let totalSplitTime =
-      this.splitPace.hours * 3600 +
-      this.splitPace.minutes * 60 +
-      this.splitPace.seconds;
     let totalTime =
       this.time.hours * 3600 + this.time.minutes * 60 + this.time.seconds;
     let timeDone = 0;
     while (distanceDone < this.distance * this.distanceUnit) {
       let distanceLeft = totalDistance - distanceDone;
-      let timeLeft = totalTime - timeDone;
+      /* let timeLeft = totalTime - timeDone; */
       if (distanceLeft < totalSplitDistance) {
         distanceDone += distanceLeft;
-        this.distArray.push(Math.round(distanceDone / this.splitUnit));
-        timeDone += timeLeft;
+        this.distArray.push(timeUtil.roundToTwo(distanceDone / this.splitUnit));
+        timeDone = totalTime * (distanceDone / totalDistance);
         this.timeArray.push(timeUtil.getTimeFromSecs(timeDone, true));
       } else {
         distanceDone += totalSplitDistance;
-        this.distArray.push(Math.round(distanceDone / this.splitUnit));
-        timeDone += totalSplitTime;
+        this.distArray.push(timeUtil.roundToTwo(distanceDone / this.splitUnit));
+        timeDone = totalTime * (distanceDone / totalDistance);
         this.timeArray.push(timeUtil.getTimeFromSecs(timeDone, true));
       }
       console.log(distanceDone / this.splitUnit);

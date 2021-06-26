@@ -1,14 +1,16 @@
 <template>
-  <div id="nav">
+  <nav id="nav">
     <img src="./assets/images/splitz_logo.png" id="logo" />
     <router-link to="/">Splits</router-link>
     <router-link to="/pace">Pace</router-link>
-    <router-link to="/time">Time</router-link>
-    <router-link to="/unit-conversion">Unit Conversion</router-link>
-  </div>
-  <div id="body">
+    <router-link to="/time" class="not-mobile-link">Time</router-link>
+    <router-link to="/unit-conversion" class="not-mobile-link"
+      >Unit Conversion</router-link
+    >
+  </nav>
+  <main id="body">
     <router-view />
-  </div>
+  </main>
 </template>
 
 <style lang="scss">
@@ -59,6 +61,17 @@ $body-padding: 40px;
     &:hover {
       color: rgb(202, 202, 202);
     }
+  }
+}
+
+@media (max-width: 760px) {
+  $body-padding: 20px;
+  #body {
+    padding: $body-padding;
+    min-height: calc(100vh - (#{$nav-height} + #{$body-padding * 2}));
+  }
+  #nav .not-mobile-link {
+    display: none;
   }
 }
 
