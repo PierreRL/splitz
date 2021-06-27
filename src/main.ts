@@ -7,7 +7,7 @@ const app = createApp(App).use(router);
 
 app.use(VueGtag, {
     property: {
-        id: "277299114"
+        id: "G-HLPBGW2T4Y"
     }
 }, router);
 
