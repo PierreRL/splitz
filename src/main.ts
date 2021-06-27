@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import VueGtag from "vue-gtag-next";
 
-const app = createApp(App);
+const app = createApp(App).use(router);
 
 app.use(VueGtag, {
     property: {
